@@ -43,6 +43,13 @@
           </select>
         </label>
 
+        <label class="category-field" for="filtro-categoria">
+          <span>Categoria</span>
+          <select id="filtro-categoria">
+            <option value="todas">Todas as categorias</option>
+          </select>
+        </label>
+
         <button id="limpar-filtros" class="clear-button" type="button">Limpar filtros</button>
       </div>
 
@@ -65,6 +72,13 @@
           <tbody id="tabela-lancamentos">
             <!-- O JavaScript insere as linhas da tabela aqui. -->
           </tbody>
+          <tfoot>
+            <tr class="total-row">
+              <th scope="row" colspan="4">Total dos valores exibidos</th>
+              <td id="total-valores" class="numeric total-amount">R$ 0,00</td>
+              <td></td>
+            </tr>
+          </tfoot>
         </table>
       </div>
       <p id="mensagem-vazia" class="empty-state" hidden>Nenhum lançamento encontrado com esses filtros.</p>
