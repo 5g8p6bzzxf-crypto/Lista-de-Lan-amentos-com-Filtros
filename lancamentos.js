@@ -20,11 +20,26 @@ const lancamentos = [
 // Guarda referências aos elementos da página para atualizar a tabela.
 const campoBusca = document.querySelector("#busca-descricao");
 const filtroTipo = document.querySelector("#filtro-tipo");
+const filtroCategoria = document.querySelector("#filtro-categoria");
+const totalValores = document.querySelector("#total-valores");
 const botaoLimpar = document.querySelector("#limpar-filtros");
 const corpoTabela = document.querySelector("#tabela-lancamentos");
 const totalRegistros = document.querySelector("#total-registros");
 const resultadoTexto = document.querySelector("#resultado-texto");
 const mensagemVazia = document.querySelector("#mensagem-vazia");
+
+// Preenche o filtro com as categorias existentes, sem duplicações.
+function preencherFiltroCategorias() {
+  const categorias = [...new Set(lancamentos.map((lancamento) => lancamento.categoria))]
+    .sort((a, b) => a.localeCompare(b, "pt-BR"));
+
+  categorias.forEach((categoria) => {
+    const opcao = document.createElement("option");
+    opcao.value = categoria;
+    opcao.textContent = categoria;
+    filtroCategoria.appendChild(opcao);
+  });
+}
 
 // Formata valores como moeda brasileira (Real).
 const formatarMoeda = new Intl.NumberFormat("pt-BR", {
@@ -116,6 +131,7 @@ function criarLinha(lancamento) {
 function renderizarTabela() {
   const termo = campoBusca.value.trim().toLocaleLowerCase("pt-BR");
   const tipoSelecionado = filtroTipo.value;
+  const categoriaSelecionada = filtroCategoria.value;
 
   const filtrados = lancamentos.filter((lancamento) => {
     const correspondeDescricao = lancamento.descricao
@@ -123,14 +139,20 @@ function renderizarTabela() {
       .includes(termo);
     const correspondeTipo =
       tipoSelecionado === "todos" || lancamento.tipo === tipoSelecionado;
+    const correspondeCategoria =
+      categoriaSelecionada === "todas" || lancamento.categoria === categoriaSelecionada;
 
-    return correspondeDescricao && correspondeTipo;
+    return correspondeDescricao && correspondeTipo && correspondeCategoria;
   });
 
   // Limpa as linhas anteriores antes de inserir os resultados atuais.
   corpoTabela.replaceChildren();
   const linhas = filtrados.map(criarLinha);
   corpoTabela.append(...linhas);
+
+  // Soma os valores dos lançamentos que passaram por todos os filtros.
+  const somaFiltrada = filtrados.reduce((soma, lancamento) => soma + lancamento.valor, 0);
+  totalValores.textContent = formatarMoeda.format(somaFiltrada);
 
   // Atualiza os contadores e a mensagem de tabela vazia.
   totalRegistros.textContent = `${filtrados.length} ${filtrados.length === 1 ? "lançamento" : "lançamentos"}`;
@@ -144,13 +166,16 @@ function renderizarTabela() {
 // A busca e o filtro são executados imediatamente após cada alteração.
 campoBusca.addEventListener("input", renderizarTabela);
 filtroTipo.addEventListener("change", renderizarTabela);
+filtroCategoria.addEventListener("change", renderizarTabela);
 
 // Restaura os filtros para o estado inicial.
 botaoLimpar.addEventListener("click", () => {
   campoBusca.value = "";
   filtroTipo.value = "todos";
+  filtroCategoria.value = "todas";
   renderizarTabela();
 });
 
-// Exibe os 15 lançamentos ao abrir a página.
+// Prepara as categorias e exibe os 15 lançamentos ao abrir a página.
+preencherFiltroCategorias();
 renderizarTabela();
