@@ -95,7 +95,7 @@ h1 { margin-bottom: 5px; font-size: clamp(26px, 4vw, 34px); line-height: 1.15; l
 
 .filters {
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) minmax(180px, 240px) auto;
+  grid-template-columns: minmax(220px, 1fr) minmax(160px, 210px) minmax(170px, 220px) auto;
   align-items: end;
   gap: 14px;
   margin-bottom: 20px;
@@ -187,6 +187,18 @@ td {
 
 tbody tr:last-child td { border-bottom: 0; }
 tbody tr:hover { background: #F9FAFB; }
+
+tfoot { background: #EFF6FF; }
+.total-row th, .total-row td {
+  padding: 16px;
+  border-top: 2px solid #BFDBFE;
+  color: var(--azul);
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.total-row th { text-align: left; letter-spacing: 0; text-transform: none; }
+.total-amount { font-variant-numeric: tabular-nums; }
 .description-cell { color: #111827; font-weight: 700; }
 .category-cell { color: #6B7280; }
 .numeric { text-align: right; }
